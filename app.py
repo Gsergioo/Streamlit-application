@@ -119,6 +119,7 @@ def complet_missing_data(df):
         for column in columns:
             df[column] = df[column].fillna(df[column].mean())
         values_explore = pd.DataFrame({"Column": df.columns, "Types": df.dtypes, "NA #": df.isna().sum(), "NA %": df.isna().sum()/df.shape[0] * 100})
+        st.markdown("New dataset: ")
         st.dataframe(values_explore)
         return df
         
@@ -127,6 +128,7 @@ def complet_missing_data(df):
         for column in columns:
             df[column] = df[column].fillna(df[column].median())
         values_explore = pd.DataFrame({"Column": df.columns, "Types": df.dtypes, "NA #": df.isna().sum(), "NA %": df.isna().sum()/df.shape[0] * 100})
+        st.markdown("New dataset: ")
         st.dataframe(values_explore)
         return df 
       
@@ -135,6 +137,7 @@ def complet_missing_data(df):
         for column in columns:
             df[column] = df[column].fillna(df[column].mode())
         values_explore = pd.DataFrame({"Column": df.columns, "Types": df.dtypes, "NA #": df.isna().sum(), "NA %": df.isna().sum()/df.shape[0] * 100})
+        st.markdown("New dataset: ")
         st.dataframe(values_explore)
         return df
 
@@ -160,13 +163,20 @@ def sidebar_configs():
         if(univariate_info):
             show_descriptive_info(df)    
         
-        correlations_info = st.sidebar.checkbox("Correlations infos")
+        correlations_info = st.sidebar.checkbox("Correlation infos")
         if(correlations_info):
             show_correlations_info(df)
         
         plot_graph_flag = st.sidebar.checkbox("Plot graphs")
         if(plot_graph_flag):
             plot_graph(df)
+
+        complete_data = st.sidebar.checkbox("Complete missing data: ")
+        if(complete_data):
+            new_df = complet_missing_data(df)
+            st.write(f"Download new dataset: {get_table_download_link(new_df)}", unsafe_allow_html=True)
+
+        
 
 def main():
     st.title("Analyzing data with Streamlit")
